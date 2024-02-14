@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  arena_delivery:
+    image: arena_delivery
+    container_name: arena_delivery
+    build: ./
+    command: uvicorn main:app --reload --proxy-headers --host 0.0.0.0 --port 8000
+    restart: always
+    ports:
+      - "4010:8000"
+    volumes:
+      - ./static:/code/static
+      - ./app/logs:/code/app/logs
+    stdin_open: True
+    tty: True
+    

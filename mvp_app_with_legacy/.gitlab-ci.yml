@@ -1,0 +1,32 @@
+stages:
+  - deploy_dev_app
+  - deploy_prod_app
+
+before_script:
+  - echo "${CI_JOB_NAME} ${CI_COMMIT_REF_NAME}"
+
+deploy_dev:
+  stage: deploy_dev_app
+  only:
+    - develop
+  script:
+    - cp $ENV_DEV .env
+    - docker-compose -f ./docker-compose.dev.yml up --build -d
+  tags:
+    - cleex_runner
+  artifacts:
+    paths:
+      - .env
+
+deploy_prod:
+  stage: deploy_prod_app
+  only:
+    - main
+  script:
+    - cp $ENV_PROD .env
+    - docker-compose -f ./docker-compose.yml up --build -d
+  tags:
+    - cleex_runner
+  artifacts:
+    paths:
+      - .env
